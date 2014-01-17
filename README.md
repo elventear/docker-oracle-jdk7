@@ -1,7 +1,5 @@
-docker-oracle-jdk7
-==================
-
 Docker - Trusted Build for Oracle JDK7
+==================
 
 You can test it out by issuing:
 ```
