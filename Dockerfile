@@ -1,27 +1,14 @@
 # use the ubuntu base image provided by dotCloud
-FROM ubuntu:quantal
+FROM debian:jessie
 
-MAINTAINER Haroon Rafique https://github.com/hrafique
+MAINTAINER Pepe Barbe <dev@antropoide.net>
 
-# add community-maintained universe repository to sources
-RUN sed -i.bak 's/main$/main universe/' /etc/apt/sources.list
-
-# date packages were last updated
-ENV REFRESHED_AT 2014-01-14
-ENV DEBIAN_FRONTEND noninteractive
-# resynchronize package index files from their sources
-RUN apt-get update
-
-# install software-properties-common (ubuntu >= 12.10) to be able to use add-apt-repository
-RUN apt-get -y install software-properties-common
-# add PPA for java
-RUN add-apt-repository ppa:webupd8team/java
-# resynchronize package index files from their sources
-RUN apt-get update
+RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu precise main" >> /etc/apt/sources.list.d/oracle-jdk.list && \
+    echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu precise main" >> /etc/apt/sources.list.d/oracle-jdk.list && \
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EEA14886 && \
+    apt-get update 
 
 # accept Oracle license
 RUN echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | \
-    /usr/bin/debconf-set-selections
-# install jdk7
-RUN apt-get -y install oracle-java7-installer
+    /usr/bin/debconf-set-selections && apt-get -y install oracle-java7-installer
 ENV JAVA_HOME /usr/lib/jvm/java-7-oracle
